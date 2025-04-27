@@ -1,0 +1,48 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    color: #00ffcc;
+    background: url('https://files.catbox.moe/wwqaw0.jpeg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.hidden {
+    display: none;
+}
+
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: #00ffcc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+}
+
+#main-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.payment-method {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.wallet {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #00ffcc;
+}

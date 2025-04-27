@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Payment KyxzanHost</title>
+</head>
+<body>
+    <div id="loading-screen">
+        <h1>Loading...</h1>
+    </div>
+
+    <div id="main-content" class="hidden">
+        <img src="https://files.catbox.moe/2uiz4q.jpeg" alt="Logo" class="logo">
+        <h2>Pilih Metode Pembayaran</h2>
+        <div class="payment-method">
+            <div class="wallet">
+                <h3>E-Wallet</h3>
+                <p id="ewallet-info">Dana: 0895343084438</p>
+                <button onclick="copyToClipboard('ewallet-info')">Salin</button>
+                <button onclick="zoomText('ewallet-info')">Zoom</button>
+            </div>
+            <div class="wallet">
+                <h3>Gopay</h3>
+                <p id="gopay-info">Gopay: 0895343084438</p>
+                <button onclick="copyToClipboard('gopay-info')">Salin</button>
+                <button onclick="zoomText('gopay-info')">Zoom</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="background-music" src="https://files.catbox.moe/cwb05y.mp3" preload="auto"></audio>
+    <script src="script.js"></script>
+</body>
+</html>
