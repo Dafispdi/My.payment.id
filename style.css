@@ -1,0 +1,549 @@
+:root {
+            --primary-color: #00ffff; /* Neon Cyan */
+            --secondary-color: #9400d3; /* Dark Violet */
+            --background-start: #0a0a1e; /* Deep Space Blue */
+            --background-end: #141430; /* Slightly Lighter Space Blue */
+            --text-color: #e0e0e0; /* Light Grey */
+            --card-bg: rgba(16, 16, 48, 0.7); /* Semi-transparent Dark Blue */
+            --glow-color: rgba(0, 255, 255, 0.7);
+            --highlight-color: #ff00ff; /* Magenta */
+            --shadow-color: rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--background-start), var(--background-end));
+            color: var(--text-color);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0 50 L50 0 L100 50 L50 100 Z" fill="none" stroke="%231a1a40" stroke-width="0.5"/></svg>'),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="1" fill="%232a2a50"/></svg>');
+            background-size: 50px 50px, 15px 15px;
+            opacity: 0.1;
+            z-index: -1;
+            animation: subtleGridMove 20s linear infinite;
+        }
+
+        @keyframes subtleGridMove {
+          0% { background-position: 0 0, 0 0; }
+          100% { background-position: 100px 100px, 30px 30px; }
+        }
+
+
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--background-start); /* Solid start for loader */
+            display: flex;
+            flex-direction: column; /* Stack spinner and text */
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            transform: scale(1.1) rotate(15deg); /* Add a slight twist on exit */
+            pointer-events: none;
+        }
+
+        /* --- Futuristic Spinner --- */
+        .spinner {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            margin-bottom: 25px; /* Space between spinner and text */
+        }
+
+        .spinner::before, .spinner::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            border: 5px solid transparent;
+        }
+
+        .spinner::before {
+            width: 100%;
+            height: 100%;
+            border-top-color: var(--primary-color);
+            border-left-color: var(--primary-color);
+            animation: spin 1.5s cubic-bezier(0.6, 0.1, 0.4, 0.9) infinite;
+            filter: drop-shadow(0 0 5px var(--primary-color));
+        }
+
+        .spinner::after {
+            width: 80%;
+            height: 80%;
+            top: 10%;
+            left: 10%;
+            border-bottom-color: var(--secondary-color);
+            border-right-color: var(--secondary-color);
+            animation: spinReverse 1s linear infinite;
+            filter: drop-shadow(0 0 5px var(--secondary-color));
+        }
+
+        .loader-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px var(--primary-color);
+            letter-spacing: 2px;
+            animation: pulseText 1.5s infinite ease-in-out;
+        }
+
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes spinReverse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+
+        @keyframes pulseText {
+          0%, 100% { opacity: 0.7; transform: scale(0.98); }
+          50% { opacity: 1; transform: scale(1.02); }
+        }
+        /* --- End Futuristic Spinner --- */
+
+
+        .page {
+            text-align: center;
+            padding: 40px 30px; /* Adjusted padding */
+            max-width: 650px; /* Slightly smaller max-width */
+            width: 90%; /* Responsive width */
+            background: var(--card-bg);
+            border-radius: 25px; /* Sharper radius */
+            border: 1px solid rgba(0, 255, 255, 0.2); /* Subtle border */
+            box-shadow: 0 15px 50px var(--shadow-color),
+                        inset 0 0 15px rgba(0, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(30px) scale(0.95); /* Start slightly below and smaller */
+            transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 1;
+            backdrop-filter: blur(10px); /* Stronger blur */
+            position: absolute; /* Needed for absolute positioning */
+        }
+
+        .page.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .page.hidden {
+            opacity: 0;
+            transform: translateY(-30px) scale(0.95); /* Exit upwards */
+            pointer-events: none;
+        }
+
+        /* Common Page Header Styles */
+        .page h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.8rem; /* Slightly adjusted size */
+            font-weight: 700;
+            color: #fff; /* Pure white for main headers */
+            margin-bottom: 20px; /* Reduced margin */
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px var(--glow-color); /* More pronounced glow */
+            animation: slideDownFadeIn 1s ease-out forwards;
+             animation-delay: 0.3s; /* Stagger animation */
+             opacity:0;
+        }
+
+        .page .subtitle {
+            font-size: 1.1rem; /* Slightly smaller */
+            color: #b0c4de; /* Light Steel Blue for subtitles */
+            margin-bottom: 25px;
+            line-height: 1.6;
+             animation: slideUpFadeIn 1s ease-out forwards;
+              animation-delay: 0.5s; /* Stagger animation */
+              opacity:0;
+        }
+
+         @keyframes slideDownFadeIn {
+           from { opacity: 0; transform: translateY(-20px); }
+           to { opacity: 1; transform: translateY(0); }
+         }
+         @keyframes slideUpFadeIn {
+             from { opacity: 0; transform: translateY(20px); }
+             to { opacity: 1; transform: translateY(0); }
+           }
+
+        /* Specific Page Styles */
+        #about .typing-container {
+            height: 50px; /* Allocate space */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        #about .typing-animation {
+            display: inline-block;
+            font-size: 1.4rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 500;
+            color: var(--primary-color);
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid var(--primary-color); /* Blinking cursor */
+            width: 0; /* Starts invisible */
+             animation: typing 4s steps(28, end) forwards, blinkCursor 0.7s step-end infinite;
+             animation-delay: 1.2s, 1.2s; /* Stagger typing animation */
+             opacity: 0; /* Initially hidden until animation starts */
+        }
+
+
+         @keyframes typing {
+             from { width: 0; opacity: 0; }
+             1% { opacity: 1; }
+             to { width: 28ch; opacity: 1; } /* Adjust '28ch' based on your text */
+         }
+
+         @keyframes blinkCursor {
+             from, to { border-color: transparent; }
+             50% { border-color: var(--primary-color); }
+         }
+
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px; /* Slightly adjusted padding */
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--background-start); /* Dark text on bright button */
+            text-decoration: none;
+            border-radius: 8px; /* Slightly sharper radius */
+            font-weight: 500;
+            font-size: 1rem;
+             font-family: 'Orbitron', sans-serif; /* Button font */
+            position: relative;
+            overflow: hidden;
+            border: none; /* Remove default border */
+             transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3), 0 2px 5px rgba(148, 0, 211, 0.2);
+             transform: translateY(0);
+              animation: buttonPopIn 1s ease-out forwards;
+             animation-delay: 1.8s; /* Delay button animation */
+              opacity: 0; /* Start hidden */
+               cursor: pointer; /* Indicate it's clickable */
+        }
+
+          @keyframes buttonPopIn {
+             from { opacity: 0; transform: scale(0.8) translateY(10px); }
+             to { opacity: 1; transform: scale(1) translateY(0); }
+           }
+
+
+        .btn::before { /* Glitch/Scanline Effect */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+            transform: skewX(-25deg);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 150%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.03); /* Lift and slightly enlarge */
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.5), 0 5px 10px rgba(148, 0, 211, 0.4);
+             background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); /* Swap gradient on hover */
+        }
+
+        .btn:active {
+              transform: translateY(1px) scale(0.98); /* Press down effect */
+              box-shadow: 0 2px 10px rgba(0, 255, 255, 0.4), 0 1px 3px rgba(148, 0, 211, 0.3);
+            }
+
+
+        /* --- Payment Page Specific --- */
+        #payment {
+             max-width: 550px; /* Narrower for payment focus */
+            overflow-y: auto; /* Allow scrolling if content overflows */
+             max-height: 85vh; /* Limit height on smaller viewports */
+        }
+
+        #payment h1 {
+             font-size: 2.3rem;
+             text-shadow: 0 0 12px var(--glow-color), 0 0 20px var(--highlight-color);
+        }
+
+        .qr-frame {
+            position: relative;
+            display: inline-block;
+            padding: 15px; /* Reduced padding */
+            background: rgba(0, 255, 255, 0.05); /* Very subtle background */
+            border-radius: 15px; /* Slightly adjusted */
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid var(--primary-color);
+             transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+             animation: popUpElement 0.8s ease-out forwards;
+             animation-delay: 0.7s; /* Delay QR appearance */
+             opacity: 0; /* Start hidden */
+        }
+
+          @keyframes popUpElement {
+             from { opacity: 0; transform: scale(0.8); }
+             to { opacity: 1; transform: scale(1); }
+           }
+
+
+        .qr-frame::before, .qr-frame::after { /* Animated Corner Borders */
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+             border-color: var(--primary-color);
+            border-style: solid;
+            transition: transform 0.4s ease;
+            }
+
+            .qr-frame::before { top: -5px; left: -5px; border-width: 3px 0 0 3px; }
+            .qr-frame::after { top: -5px; right: -5px; border-width: 3px 3px 0 0; }
+
+        .qr-frame span::before, .qr-frame span::after { /* Need a span inside for bottom corners */
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: var(--primary-color);
+            border-style: solid;
+            transition: transform 0.4s ease;
+            }
+            .qr-frame span::before { bottom: -5px; left: -5px; border-width: 0 0 3px 3px; }
+            .qr-frame span::after { bottom: -5px; right: -5px; border-width: 0 3px 3px 0; }
+
+
+        .qr-frame:hover {
+            transform: translateY(-8px) scale(1.05); /* Enhanced lift */
+            box-shadow: 0 0 30px var(--glow-color);
+        }
+
+            .qr-frame:hover::before { transform: translate(-3px, -3px); }
+            .qr-frame:hover::after { transform: translate(3px, -3px); }
+            .qr-frame:hover span::before { transform: translate(-3px, 3px); }
+            .qr-frame:hover span::after { transform: translate(3px, 3px); }
+
+        .qr-frame img {
+            width: 180px; /* Adjusted size */
+            height: auto;
+            display: block; /* Prevents extra space below */
+            border-radius: 10px;
+             transition: filter 0.4s ease;
+        }
+
+        .qr-frame:hover img {
+             filter: brightness(1.1) contrast(1.1);
+        }
+
+
+        .payment-info {
+            margin: 25px 0; /* Increased margin */
+            text-align: left;
+             background: rgba(0, 0, 0, 0.2); /* Darker info section bg */
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 255, 0.1);
+             animation: popUpElement 0.8s ease-out forwards;
+             animation-delay: 0.9s; /* Delay info section */
+              opacity: 0;
+        }
+
+        details {
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.05); /* Subtle details background */
+            border-radius: 8px;
+             padding: 5px; /* Padding around summary/content */
+            border-left: 3px solid transparent; /* Indicator line */
+            transition: background 0.4s ease, border-left-color 0.4s ease;
+             position: relative;
+        }
+
+        details[open] {
+            background: rgba(0, 255, 255, 0.08);
+            border-left-color: var(--primary-color);
+        }
+
+
+        summary {
+            font-family: 'Orbitron', sans-serif; /* Use Orbitron for summary */
+            font-weight: 500;
+            cursor: pointer;
+            padding: 12px 15px;
+            outline: none;
+            color: var(--primary-color);
+            transition: color 0.4s ease, letter-spacing 0.4s ease;
+            position: relative; /* Needed for ::marker pseudo-element styling */
+            list-style: none; /* Hide default marker */
+            letter-spacing: 1px;
+        }
+         summary::-webkit-details-marker { display: none; } /* Hide default marker in Chrome/Safari */
+
+
+        summary::before { /* Custom marker */
+            content: '+'; /* Use text for marker */
+            position: absolute;
+            left: -5px; /* Position marker */
+             top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+            font-size: 1.2em;
+            font-weight: bold;
+             color: var(--primary-color);
+             transition: transform 0.4s ease;
+        }
+
+
+        details[open] summary::before {
+             transform: translateY(-50%) rotate(45deg); /* Rotate to 'x' or tilted '+' */
+        }
+
+        details[open] summary {
+              color: var(--highlight-color); /* Change color when open */
+             letter-spacing: 1.5px;
+         }
+
+        .payment-info p {
+            padding: 8px 20px 12px 20px; /* Add some bottom padding */
+            font-size: 0.95rem;
+            color: #ccc; /* Lighter grey for details text */
+             margin-left: 10px; /* Indent content slightly */
+             border-left: 1px dashed rgba(0, 255, 255, 0.3);
+              opacity: 0;
+             max-height: 0;
+              transition: opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease;
+               overflow: hidden;
+        }
+
+        details[open] p {
+            padding-top: 10px;
+            padding-bottom: 10px;
+             max-height: 100px; /* Allow space for content to appear */
+             opacity: 1;
+        }
+
+         .payment-info strong {
+             color: var(--primary-color);
+             font-weight: 500;
+         }
+
+        .social {
+            display: flex;
+            justify-content: center;
+            gap: 25px; /* Increased gap */
+            margin-top: 30px; /* Increased top margin */
+             animation: popUpElement 0.8s ease-out forwards;
+             animation-delay: 1.1s; /* Delay social buttons */
+              opacity: 0;
+        }
+
+        /* QR Zoom Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+             background: rgba(10, 10, 30, 0.9); /* Dark, slightly transparent overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+            z-index: 1000;
+             backdrop-filter: blur(8px); /* Blur background behind overlay */
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+             transition-delay: 0s;
+        }
+
+        .overlay img {
+            max-width: 90%;
+             width: auto; /* Let height dictate width */
+            max-height: 80vh;
+             border-radius: 15px;
+             border: 3px solid var(--primary-color);
+             box-shadow: 0 0 40px var(--glow-color);
+             transform: scale(0.7);
+              opacity: 0;
+             transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28), opacity 0.5s ease; /* Bounce effect */
+        }
+
+        .overlay.active img {
+             transform: scale(1);
+             opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+             .page h1 { font-size: 2.4rem; }
+              #about .typing-animation { font-size: 1.2rem; }
+             #payment h1 { font-size: 2rem; }
+              .btn { padding: 12px 28px; font-size: 0.9rem; }
+             .qr-frame img { width: 160px; }
+             .payment-info p { font-size: 0.9rem; }
+        }
+
+         @media (max-width: 480px) {
+            body { overflow: auto; } /* Allow scrolling on very small screens */
+            .page { padding: 30px 20px; max-width: 95%; border-radius: 20px; }
+            .page h1 { font-size: 2rem; margin-bottom: 15px;}
+            .page .subtitle { font-size: 1rem; margin-bottom: 20px; }
+            #about .typing-container { height: 40px; }
+            #about .typing-animation { font-size: 1.1rem; animation: typing 4s steps(28, end) forwards, blinkCursor 0.7s step-end infinite; animation-delay: 1.2s, 1.2s; opacity: 0; }
+            #payment { max-height: none; } /* Remove height limit for scroll */
+             #payment h1 { font-size: 1.8rem; }
+            .btn { padding: 10px 25px; font-size: 0.9rem; }
+            .qr-frame img { width: 140px; }
+             .qr-frame { padding: 12px; }
+             .payment-info { padding: 15px; }
+             summary { padding: 10px 12px; }
+             .payment-info p { padding: 6px 15px 10px 15px; font-size: 0.85rem; margin-left: 8px; }
+             .social { gap: 15px; }
+             .overlay img { max-height: 70vh; }
+          }
+
+    
+.logo {
+    width: 100px;
+    margin-bottom: 15px;
+    animation: slideDownFadeIn 1s ease-out forwards;
+    animation-delay: 0.2s;
+    opacity: 0;
+}

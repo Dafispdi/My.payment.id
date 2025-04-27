@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment KKyxzaTzy</title>
+    <link rel="icon" type="image/png" href="https://img12.pixhost.to/images/1567/586318679_imgtmp.jpg">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@300;400&display=swap">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <div class="loader-text">INITIALIZING...</div>
+    </div>
+
+    <!-- Audio Player (Hidden) -->
+    <audio id="background-music" loop>
+      <source src="https://cloudkuimages.com/uploads/audios/67f797fde383d.mp3" type="audio/mpeg"> <!-- Ganti URL MP3 mu disini -->
+      Browser lu jadul amat, kaga support audio.
+    </audio>
+
+
+    <div class="page active" id="about"> <!-- Start with about page active -->
+        <img src="https://img12.pixhost.to/images/1567/586318679_imgtmp.jpg" alt="Logo" class="logo">
+<h1>Website Payment</h1>
+         <div class="typing-container">
+          <span class="typing-animation">Hello, I'am KyxzanHosting</span>
+          </div>
+        <p class="subtitle">Accessing secure payment matrix... Welcome, operative. Select your transaction protocol.</p>
+        <button class="btn" onclick="showPayment()">Start</button> <!-- Changed to button -->
+    </div>
+
+    <div class="page hidden" id="payment"> <!-- Payment page hidden initially -->
+        <img src="https://img12.pixhost.to/images/1567/586318679_imgtmp.jpg" alt="Logo" class="logo">
+<h1>Payment Protocols</h1>
+        <p class="subtitle">Choose preferred secure channel. Scan datastream below or use direct transfer coordinates.</p>
+
+        <div class="qr-frame" onclick="zoomQR()">
+           <span></span> <!-- Span for bottom corners -->
+            <img id="qrisImage" src="https://img12.pixhost.to/images/1567/586319810_imgtmp.jpg" alt="QRIS Datastream">
+        </div>
+
+        <p class="subtitle" style="margin-top: 15px; font-size: 0.9rem;">Payment Qris</p>
+
+        <div class="payment-info">
+            <details>
+                <summary>E-wallet</summary>
+                <p><strong>DANA:</strong> <code>0895343084438</code></p>
+                <p><strong>GOPAY:</strong> <code>0895343084438</code></p>
+            </details>
+
+            <details>
+                <summary>Bank Transfer</summary>
+                <p><strong>BCA:</strong> [ Belum Tersedia ]</p>
+            </details>
+        </div>
+
+        <div class="social">
+            <a href="https://wa.me/62895343084438" target="_blank" class="btn">Contact_WA</a>
+            <a href="https://t.me/Kyxsancs" target="_blank" class="btn">Contact_TG</a>
+        </div>
+
+        <button class="btn" onclick="showAbout()" style="margin-top: 20px;">Return_Mainframe</button> <!-- Changed to button -->
+    </div>
+
+    <!-- QR Zoom Overlay -->
+    <div class="overlay" id="qrOverlay" onclick="closeZoom()">
+        <img id="zoomedQR" src="" alt="Magnified Datastream">
+    </div>
+
+    
+    <script src="script.js"></script>
+</body>
+</html>
